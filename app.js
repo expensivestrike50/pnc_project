@@ -636,6 +636,25 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Client / Advisor view switch in the top bar
+function syncViewSwitch() {
+  const role = window.ProBankAuth?.role() === 'advisor' ? 'advisor' : 'client';
+  document.querySelectorAll('.view-switch [data-view]').forEach((b) => {
+    const on = b.dataset.view === role;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', String(on));
+  });
+}
+document.querySelector('.view-switch').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-view]');
+  if (!b) return;
+  try { localStorage.setItem('probank.role', JSON.stringify(b.dataset.view)); } catch {}
+  syncViewSwitch();
+  location.hash = b.dataset.view === 'advisor' ? '#/overview' : '#/owner';
+});
+window.addEventListener('hashchange', syncViewSwitch);
+window.addEventListener('load', syncViewSwitch);
+
 // Account menu on the header profile picture
 const acctBtn = document.getElementById('acctBtn');
 const acctMenu = document.getElementById('acctMenu');
@@ -644,7 +663,8 @@ function setAcctMenu(open) {
     const email = window.ProBankAuth?.current();
     const acc = email ? window.ProBankAuth.account(email) : null;
     document.getElementById('acctName').textContent = acc?.name || 'Signed in';
-    document.getElementById('acctEmail').textContent = email || '';
+    const role = window.ProBankAuth?.role() === 'advisor' ? 'Advisor' : 'Client';
+    document.getElementById('acctEmail').textContent = email ? `${role} · ${email}` : '';
   }
   acctMenu.hidden = !open;
   acctBtn.setAttribute('aria-expanded', String(open));

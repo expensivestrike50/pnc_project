@@ -7,6 +7,7 @@
 (() => {
   const ACCOUNTS = 'probank.accounts';
   const SESSION = 'probank.session';
+  const ROLE = 'probank.role';
   const DEMO = { email: 'demo@probank.test', name: 'Alex Morgan', business: 'Bennett Precision Manufacturing' };
 
   const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
@@ -17,9 +18,13 @@
     account: (email) => read(ACCOUNTS, {})[email],
     obKey: (email = auth.current()) => `probank.onboarding.${email || 'guest'}`,
     onboarding: (email) => read(auth.obKey(email), {}),
-    signIn(email) { write(SESSION, email); },
-    signOut() { try { localStorage.removeItem(SESSION); } catch {} location.hash = '#/home'; },
-    nextRoute(email = auth.current()) { return auth.onboarding(email).done ? '#/owner' : '#/welcome'; },
+    role: () => read(ROLE, 'client'),
+    signIn(email, role = 'client') { write(SESSION, email); write(ROLE, role); },
+    signOut() { try { localStorage.removeItem(SESSION); localStorage.removeItem(ROLE); } catch {} location.hash = '#/home'; },
+    nextRoute(email = auth.current()) {
+      if (auth.role() === 'advisor') return '#/overview';
+      return auth.onboarding(email).done ? '#/owner' : '#/welcome';
+    },
   };
   window.ProBankAuth = auth;
 
@@ -66,7 +71,7 @@
   function landing() {
     const signed = auth.current();
     const cta = signed
-      ? `<a class="lp-btn fill sm" href="${auth.nextRoute()}">Dashboard</a>`
+      ? `<a class="lp-btn fill sm" href="#/signin">Dashboard</a>`
       : `<a class="lp-btn fill sm" href="#/signin">Sign in</a>`;
     const values = [
       ['integrity', 'Valuation', 'A preliminary value range from a few honest answers'],
@@ -102,7 +107,7 @@
         <p>A few honest answers today give you a clear picture of what your business may be worth and where it could go next.</p>
         <div class="lp-hero-btns">
           ${signed
-            ? `<a class="lp-btn fill" href="${auth.nextRoute()}">Go to dashboard</a><a class="lp-btn line" href="#" data-signout>Sign out</a>`
+            ? `<a class="lp-btn fill" href="#/signin">Go to dashboard</a><a class="lp-btn line" href="#" data-signout>Sign out</a>`
             : `<a class="lp-btn fill" href="#/welcome">Get started</a><a class="lp-btn line" href="#/signin">Sign in</a>`}
         </div>
         <div class="lp-contact"><span class="ph">${ico.phone}${PHONE}</span>${social}</div>
@@ -138,6 +143,11 @@
         <h1>${up ? 'Create your account' : 'Sign in'}</h1>
         <div class="sub">${up ? 'It takes less than a minute.' : 'Good to see you again.'}</div>
         <form class="au-form" id="auForm" data-mode="${mode}" novalidate>
+          ${up ? '' : `<div class="au-field"><label>I am signing in as</label>
+            <div class="au-role" role="radiogroup" aria-label="Account type">
+              <label><input type="radio" name="role" value="client" ${auth.role() !== 'advisor' ? 'checked' : ''}><span><b>Client</b><small>Business owner</small></span></label>
+              <label><input type="radio" name="role" value="advisor" ${auth.role() === 'advisor' ? 'checked' : ''}><span><b>Advisor</b><small>PNC team member</small></span></label>
+            </div></div>`}
           ${fields}
           <div class="au-field"><label>Email</label><input class="au-input" name="email" type="email" autocomplete="email" placeholder="you@company.com"></div>
           <div class="au-field"><label>Password</label><div class="au-pw"><input class="au-input" name="password" type="password" autocomplete="${up ? 'new-password' : 'current-password'}" placeholder="${up ? '8+ characters' : 'Your password'}"><button type="button" data-showpw>Show</button></div></div>
@@ -170,9 +180,9 @@
     }
     // The front page is always shown; it offers a dashboard button when signed in
     if (r === '' || r === 'landing') { location.replace('#/home'); return false; }
-    if (r === 'signin' || r === 'signup') { location.replace(auth.nextRoute()); return false; }
+    if (r === 'signup') { location.replace(auth.nextRoute()); return false; }
     // Signed in but onboarding unfinished: dashboard routes go to onboarding
-    if (!PUBLIC.includes(r) && !ONBOARDING.includes(r) && !auth.onboarding().done) { location.replace('#/welcome'); return false; }
+    if (auth.role() !== 'advisor' && !PUBLIC.includes(r) && !ONBOARDING.includes(r) && !auth.onboarding().done) { location.replace('#/welcome'); return false; }
     return true;
   }
 
@@ -209,8 +219,9 @@
       write(ACCOUNTS, accounts);
       const ob = auth.onboarding(DEMO.email);
       write(auth.obKey(DEMO.email), { ...ob, name: DEMO.name, business: DEMO.business, reason: ob.reason || 'family', done: true });
-      auth.signIn(DEMO.email);
-      location.hash = '#/owner';
+      const role = root.querySelector('input[name="role"]:checked')?.value || 'client';
+      auth.signIn(DEMO.email, role);
+      location.hash = auth.nextRoute(DEMO.email);
     }
   });
 
@@ -252,7 +263,7 @@
     } else {
       if (!accounts[email] || accounts[email].hash !== h) return fail(null, 'Email or password is incorrect.');
     }
-    auth.signIn(email);
+    auth.signIn(email, up ? 'client' : v.role || 'client');
     location.hash = auth.nextRoute(email);
   });
 

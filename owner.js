@@ -42,10 +42,10 @@ const OWNER = {
     ['Advisor verification pending', 'Later journey stages open after an advisor reviews the profile.', 'teal'],
   ],
   teams: [
-    ['HW', 'Harris Williams', 'Potential fit', 'EBITDA $5.6M against an illustrative sell-side threshold. Relevant if a strategic or sponsor process is pursued.', '#1814F3', '#E7EDFF'],
-    ['PP', 'PNC Private Bank', 'Potential fit', 'Illustrative owner share of midpoint value: $22.7M. Wealth, estate and family distribution planning.', '#16DBAA', '#DCFAF8'],
-    ['BC', 'Business Credit', 'Possible fit', 'Existing debt $4.2M. Financing for management, family buyouts or recapitalization.', '#FCAA0B', '#FFF5D9'],
-    ['TM', 'Treasury Management', 'Possible fit', 'Revenue $38.4M suggests treasury complexity. Cash management continuity through ownership change.', '#FF82AC', '#FFE0EB'],
+    ['HW', 'Harris Williams', 'Potential fit', 82, 'EBITDA $5.6M against an illustrative sell-side threshold. Relevant if a strategic or sponsor process is pursued.', '#1814F3', '#E7EDFF'],
+    ['PP', 'PNC Private Bank', 'Potential fit', 78, 'Illustrative owner share of midpoint value: $22.7M. Wealth, estate and family distribution planning.', '#16DBAA', '#DCFAF8'],
+    ['BC', 'Business Credit', 'Possible fit', 64, 'Existing debt $4.2M. Financing for management, family buyouts or recapitalization.', '#FCAA0B', '#FFF5D9'],
+    ['TM', 'Treasury Management', 'Possible fit', 58, 'Revenue $38.4M suggests treasury complexity. Cash management continuity through ownership change.', '#FF82AC', '#FFE0EB'],
   ],
   comparison: [
     ['Strategic sale', 5.3, 29.6, 0, 5.1, 13.9],
@@ -281,15 +281,19 @@ function pathwaysPanel() {
   return `<div class="ow-chart">${svg}</div>${matrix}`;
 }
 
-// Illustrative logo marks for each matched team
+// Monochrome line-icon logos for each matched team
 function teamLogo(ini) {
-  const marks = {
-    HW: `<rect width="44" height="44" rx="12" fill="#14213D"/><path d="M11 30V14l7 8 7-8v16" fill="none" stroke="#F4C95D" stroke-width="3" stroke-linejoin="round"/><path d="M27 14l3 16 3-9 3 9 3-16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" transform="translate(-4 0)"/>`,
-    PP: `<rect width="44" height="44" rx="12" fill="#E6F6F3"/><path d="M10 18 22 10l12 8z" fill="#0F9F8F"/><path d="M13 20v10M19 20v10M25 20v10M31 20v10" stroke="#0F9F8F" stroke-width="3" stroke-linecap="round"/><rect x="10" y="32" width="24" height="3" rx="1.5" fill="#0F9F8F"/>`,
-    BC: `<rect width="44" height="44" rx="12" fill="#FFF1E6"/><path d="M22 8l12 7v14l-12 7-12-7V15z" fill="#E0662A"/><path d="M16 27v-4M22 27v-8M28 27v-11" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
-    TM: `<rect width="44" height="44" rx="12" fill="#F1EBFF"/><circle cx="22" cy="22" r="11" fill="none" stroke="#9B5CF6" stroke-width="3"/><path d="M22 11a11 11 0 0 1 11 11" fill="none" stroke="#5B2EC4" stroke-width="3" stroke-linecap="round"/><path d="M33 17v5h-5" fill="none" stroke="#5B2EC4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="22" r="3.5" fill="#9B5CF6"/>`,
+  const g = {
+    // advisory / M&A: rising chart
+    HW: '<path d="M12 31l7-7 5 4 9-10"/><path d="M27 18h6v6"/>',
+    // private bank: columns
+    PP: '<path d="M11 18l11-6 11 6"/><path d="M14 19v10M19.5 19v10M24.5 19v10M30 19v10"/><path d="M11 32h22"/>',
+    // business credit: card
+    BC: '<rect x="11" y="14" width="22" height="16" rx="3"/><path d="M11 19.5h22M15 25.5h5"/>',
+    // treasury: cash cycle
+    TM: '<path d="M31 18a10 10 0 0 0-17.5-2"/><path d="M13 12v4.5h4.5"/><path d="M13 26a10 10 0 0 0 17.5 2"/><path d="M31 32v-4.5h-4.5"/><path d="M22 18.5v7M24.5 20c-.4-.9-1.4-1.3-2.5-1.3-1.4 0-2.4.7-2.4 1.7 0 2.3 4.9 1.1 4.9 3.4 0 1-1 1.7-2.5 1.7-1.2 0-2.2-.5-2.6-1.4"/>',
   };
-  return `<svg class="ow-logo" viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">${marks[ini] || ''}</svg>`;
+  return `<svg class="ow-logo" viewBox="0 0 44 44" width="44" height="44" aria-hidden="true"><rect width="44" height="44" rx="12" fill="#111"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${g[ini] || ''}</g></svg>`;
 }
 
 /* ---------------- Page ---------------- */
@@ -351,11 +355,11 @@ pages.owner = () => {
       `<div class="ow-head-r"><button class="ow-link" data-tableview>Table view</button>${info('Rollover equity is retained ownership, not cash; its future value is uncertain.')}</div>`)}
     ${card('PNC teams that may help', 'Potential matches', `
       <div class="ow-teams2">
-        ${OWNER.teams.map(([ini, n, fit, d, c, bg]) => `
+        ${[...OWNER.teams].sort((a, b) => b[3] - a[3]).map(([ini, n, fit, score, d]) => `
           <div class="ow-tm" data-tip="${d}">${teamLogo(ini)}
-            <div><b>${n}</b><small>${fit}</small></div>
-            <span class="dot ${fit.startsWith('Potential') ? 'hi' : ''}"></span></div>`).join('')}
-      </div>`, info('A match is not a referral or acceptance. Advisors and specialist teams make engagement decisions.'))}
+            <div class="nm"><b>${n}</b><small>${fit}</small></div>
+            <div class="sc"><b>${score}</b><span><i style="width:${score}%"></i></span></div></div>`).join('')}
+      </div>`, `<div class="ow-head-r"><span class="ow-hint">Match score</span>${info('Match scores are relative demo indicators computed from profile fields (EBITDA, owner share, debt, revenue). A match is not a referral or acceptance; advisors and specialist teams make engagement decisions.')}</div>`)}
   </div>
 
   <div class="grid ow-r4">

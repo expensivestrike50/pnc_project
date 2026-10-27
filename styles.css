@@ -643,8 +643,12 @@ td { font-size: 16px; color: var(--text); }
 .ow-tm .av { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
 .ow-tm b { display: block; font-size: 14.5px; font-weight: 600; color: var(--navy); }
 .ow-tm small { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-.ow-tm .dot { margin-left: auto; width: 9px; height: 9px; border-radius: 50%; background: #c3cce0; }
-.ow-tm .dot.hi { background: #0F9F8F; }
+.ow-tm .nm { min-width: 0; flex: 1; }
+.ow-tm .sc { display: flex; align-items: center; gap: 10px; width: 120px; flex-shrink: 0; }
+.ow-tm .sc b { font-size: 16px; font-weight: 700; color: var(--navy); width: 26px; text-align: right; }
+.ow-tm .sc span { flex: 1; height: 6px; border-radius: 6px; background: #edf0f7; overflow: hidden; }
+.ow-tm .sc i { display: block; height: 100%; border-radius: 6px; background: #111; }
+.ow-hint { font-size: 12px; font-weight: 600; letter-spacing: .4px; color: var(--muted); }
 
 /* Bottom row */
 .ow-next { border-radius: 25px; padding: 22px 24px; color: #fff; background: linear-gradient(107deg, #4c49ed 0%, #0a06f4 100%); display: flex; flex-direction: column; }
@@ -717,3 +721,14 @@ button.hdr-avatar:hover, button.hdr-avatar[aria-expanded="true"] { border-color:
 .acct-menu a:hover, .acct-menu button:hover { background: #f5f7fa; }
 .acct-menu .danger { color: var(--red); }
 .acct-menu .danger:hover { background: #fff0f3; }
+
+/* Client / Advisor switch */
+.view-switch { display: inline-flex; margin-left: 28px; padding: 4px; border-radius: 40px; background: #f5f7fa; border: 1px solid #e6eff5; }
+.view-switch button { height: 38px; padding: 0 22px; border-radius: 30px; font-size: 14.5px; font-weight: 600; color: var(--muted); transition: background .15s, color .15s; }
+.view-switch button:hover { color: var(--navy); }
+.view-switch button.on { background: #111; color: #fff; }
+@media (max-width: 1100px) { .view-switch { margin-left: 16px; } .view-switch button { padding: 0 14px; } }
+@media (max-width: 768px) {
+  .view-switch { order: 3; width: 100%; margin: 14px 0 0; display: grid; grid-template-columns: 1fr 1fr; }
+  .search-mobile { order: 4; }
+}
