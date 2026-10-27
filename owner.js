@@ -3,7 +3,7 @@
 
 const OWNER = {
   industry: 'Manufacturing',
-  owner: 'James Bennett',
+  owner: 'James D. Bennett',
   business: 'Bennett Precision Manufacturing',
   stage: 'Assess',
   readiness: 54,
