@@ -65,8 +65,11 @@
   screens.welcome = () => {
     const st = load();
     const resumeName = st.business || DEMO_BUSINESS;
+    const guest = !window.ProBankAuth.current();
     return `
-    <div class="ob-top"><a class="ob-logo" href="#/home"><img src="assets/img/nexus-logo.png" alt="PNC NEXUS"></a><a class="ob-skip" href="#" data-signout style="margin-left:auto">SIGN OUT</a></div>
+    <div class="ob-top"><a class="ob-logo" href="#/home"><img src="assets/img/nexus-logo.png" alt="PNC NEXUS"></a>${guest
+      ? '<a class="ob-skip" href="#/signin" style="margin-left:auto">SIGN IN</a>'
+      : '<a class="ob-skip" href="#" data-signout style="margin-left:auto">SIGN OUT</a>'}</div>
     <div class="ob-body" style="max-width:900px">
       <div class="ob-talk">${mascot}<div class="ob-bubble">Hi${st.name ? ' ' + esc(st.name.split(' ')[0]) : ''}! I'm your PNC NEXUS guide. Let's understand where your business is today.</div></div>
       <div style="text-align:center"><span class="ob-eyebrow">Quick start · About 5 minutes</span></div>
@@ -78,13 +81,11 @@
         <div class="ob-step"><div class="num" style="background:#FF82AC">03</div><h3>Meet the right people</h3><p>An advisor verifies and coordinates specialists.</p></div>
       </div>
       <div class="ob-foot">
-        <a class="ob-btn" href="#/start/reason">${st.business && st.business !== DEMO_BUSINESS ? `Start with ${esc(st.business)}` : 'New profile'}</a>
+        <a class="ob-btn" href="#/start/reason">${guest ? "Let's start" : st.business && st.business !== DEMO_BUSINESS ? `Start with ${esc(st.business)}` : 'New profile'}</a>
         <div class="ob-or">OR</div>
-        <button class="ob-resume" data-resume>
-          <span class="av">🏭</span>
-          <span><span class="k">Continue</span><br><span class="v">${resumeName}</span></span>
-          ${chevron}
-        </button>
+        ${guest
+          ? `<a class="ob-resume" href="#/signin"><span class="av">👋</span><span><span class="k">Already have an account?</span><br><span class="v">Sign in</span></span>${chevron}</a>`
+          : `<button class="ob-resume" data-resume><span class="av">🏭</span><span><span class="k">Continue</span><br><span class="v">${resumeName}</span></span>${chevron}</button>`}
       </div>
     </div>`;
   };
@@ -142,13 +143,13 @@
     <div class="ob-body"><div class="ob-center">
       ${mascot}
       <h1 class="ob-h1" style="margin-top:20px">Your picture is ready${st.name ? `, ${esc(st.name.split(' ')[0])}` : ''}!</h1>
-      <p class="ob-lead">We've set up ${esc(st.business || DEMO_BUSINESS)} with a starting view. An advisor will verify it with you.</p>
+      <p class="ob-lead">${window.ProBankAuth.current() ? `We've set up ${esc(st.business || DEMO_BUSINESS)} with a starting view. An advisor will verify it with you.` : 'Create your account to save your answers and open your dashboard.'}</p>
       <div class="ob-stats">
         <div class="ob-stat" style="border-color:#1814F3"><div class="h" style="background:#1814F3">Path</div><div class="v" style="color:#1814F3">${reason.emo} ${reason.t}</div></div>
         <div class="ob-stat" style="border-color:#16DBCC"><div class="h" style="background:#16DBCC">Readiness</div><div class="v" style="color:#0fb5a8">📈 67%</div></div>
         <div class="ob-stat" style="border-color:#FF82AC"><div class="h" style="background:#FF82AC">Advisors</div><div class="v" style="color:#e4588a">👥 3 matched</div></div>
       </div>
-      <div class="ob-foot" style="width:100%"><button class="ob-btn" data-finish>Go to my dashboard</button></div>
+      <div class="ob-foot" style="width:100%"><button class="ob-btn" data-finish>${window.ProBankAuth.current() ? 'Go to my dashboard' : 'Create account to save'}</button></div>
     </div></div>`;
   };
 
@@ -166,8 +167,6 @@
     timers.forEach(clearTimeout);
     timers = [];
     const r = route();
-    // Signed-out visitors are redirected by landing.js
-    if (!window.ProBankAuth.current()) { root.classList.remove('show'); return; }
     if (!isObRoute(r)) {
       root.classList.remove('show');
       document.body.style.overflow = '';
@@ -235,7 +234,12 @@
       location.hash = '#/start/building';
       return;
     }
-    if (t.closest('[data-finish]')) { save({ done: true }); location.hash = '#/owner'; return; }
+    if (t.closest('[data-finish]')) {
+      save({ done: true });
+      // Guests create an account next; their answers carry over on sign-up
+      location.hash = window.ProBankAuth.current() ? '#/owner' : '#/signup';
+      return;
+    }
     const pw = t.closest('[data-showpw]');
     if (pw) {
       const input = pw.previousElementSibling;

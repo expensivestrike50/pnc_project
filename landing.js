@@ -1,5 +1,7 @@
 // Landing page + sign in / sign up, and the route gate for the whole app.
-// Flow: #/home -> #/signup | #/signin -> onboarding (#/welcome ...) -> dashboard
+// Flow: #/home (hero) -> Get started -> onboarding as a guest -> #/signup to save -> dashboard
+//       #/signin -> dashboard (or onboarding if unfinished)
+// The full former landing page is kept on branch backup/landing-page.
 // Accounts live in this browser only (localStorage); passwords are stored as SHA-256 hashes.
 
 (() => {
@@ -91,10 +93,6 @@
     return `
     <header class="lp-head"><div class="lp-wrap">
       ${logo}
-      <nav class="lp-nav">
-        <a href="#" data-jump="values">How it works</a><a href="#" data-jump="services">Services</a>
-        <a href="#" data-jump="glance">About us</a><a href="#" data-jump="results">Results</a><a href="#" data-jump="news">Insights</a>
-      </nav>
       <div class="right"><a class="lp-search" href="#" aria-label="Search">${ico.search}</a>${cta}</div>
     </div></header>
 
@@ -103,7 +101,7 @@
         <h1 class="lp-h1">Plan Your Next Chapter with us</h1>
         <p>A few honest answers today give you a clear picture of what your business may be worth and where it could go next.</p>
         <div class="lp-hero-btns">
-          <a class="lp-btn fill" href="#/signup">Get started</a>
+          <a class="lp-btn fill" href="#/welcome">Get started</a>
           <a class="lp-btn line" href="#/signin">Sign in</a>
         </div>
       </div>
@@ -113,73 +111,7 @@
       <div class="lp-dots"><i class="on"></i><i></i><i></i><i></i></div>
       <div class="lp-contact"><span class="ph">${ico.phone}${PHONE}</span>${social}</div>
     </div></section>
-
-    <section class="lp-values" id="lp-values"><div class="lp-wrap">
-      <div class="lp-sec-h">
-        <h2>Everything You Need for a Confident Transition</h2>
-        <p>PNC NEXUS turns a few honest answers into a clear picture: value, readiness, pathways and the right people to help.</p>
-      </div>
-      <div class="lp-vgrid">
-        ${values.map(([i, t, d]) => `<div class="lp-v"><img src="${img('icon-' + i + '.png')}" alt=""><h3>${t}</h3><p>${d}</p></div>`).join('')}
-      </div>
-    </div></section>
-
-    <section class="lp-partners"><div class="lp-wrap">
-      <h4>BUILT FOR OWNERS IN</h4>
-      <div class="lp-plogos">
-        <div class="lp-plogo"><b>MANUFACTURING</b><span>Industrial &amp; precision</span></div>
-        <div class="lp-plogo"><b>DISTRIBUTION</b><span>Logistics &amp; wholesale</span></div>
-        <div class="lp-plogo"><b>SERVICES</b><span>Professional firms</span></div>
-        <div class="lp-plogo"><b>FAMILY</b><span>Multi-generation business</span></div>
-      </div>
-      <div class="lp-pdots"><i class="on"></i><i></i><i></i><i></i></div>
-    </div></section>
-
-    <section class="lp-glance" id="lp-glance"><div class="lp-wrap">
-      <div class="ph"><img src="${img('glance.jpg')}" alt=""></div>
-      <div class="txt">
-        <h2>PNC NEXUS at a glance</h2>
-        <p>PNC NEXUS is a transition planning platform for business owners. In about five minutes, short questions, cards and sliders build a preliminary value range, a readiness score and the pathways that could fit. Then a relationship manager verifies your picture and brings in the right specialists for wealth, legal, tax and financing, only with your permission.</p>
-        <a class="lp-more" href="#/signup">Start your quick start</a>
-      </div>
-    </div></section>
-
-    <section class="lp-services" id="lp-services"><div class="lp-wrap">
-      <div class="lp-sec-h">
-        <h2>Our Services</h2>
-        <p>From the first honest answer to life after the transition, one team helps you plan every step.</p>
-      </div>
-      <div class="lp-sgrid">
-        ${services.map(([f, t]) => `<a class="lp-svc" href="#/signup"><div class="ph"><img src="${img(f)}" alt=""></div><div class="lbl"><span>${t}</span><i class="go">${ico.go}</i></div></a>`).join('')}
-      </div>
-    </div></section>
-
-    <section class="lp-results" id="lp-results"><div class="lp-wrap">
-      <div class="lp-sec-h">
-        <h2>What PNC NEXUS helps you see</h2>
-        <p>A clear starting point for one of the biggest decisions of your career.</p>
-      </div>
-      <div class="lp-stats">
-        ${stats.map(([n, u, l, hl]) => `<div class="lp-stat${hl ? ' hl' : ''}"><b>${n}${u ? `<small>${u}</small>` : ''}</b><span>${l}</span></div>`).join('')}
-      </div>
-    </div></section>
-
-    <section class="lp-news" id="lp-news"><div class="lp-wrap">
-      <div class="lp-sec-h">
-        <h2>Newsletter</h2>
-        <p style="max-width:420px">Practical insights on succession, valuation and planning your next chapter.</p>
-      </div>
-      <form id="lpNews" novalidate><input type="email" placeholder="Your email" aria-label="Your email"><button class="lp-btn fill" type="submit" style="width:132px">Subscribe</button></form>
-      <div class="ok" id="lpNewsOk"></div>
-    </div></section>
-
-    <footer class="lp-foot"><div class="lp-wrap">
-      <div><h5>About the company</h5><p>Helping business owners plan their next chapter with clarity and confidence.</p>${social}</div>
-      <div><h5>Services</h5><ul><li><a href="#">Transition Planning</a></li><li><a href="#">Business Valuation</a></li><li><a href="#">Succession Planning</a></li><li><a href="#">Wealth Planning</a></li><li><a href="#">Business Credit</a></li></ul></div>
-      <div><h5>Get Started</h5><ul><li><a href="#/signup">Create Account</a></li><li><a href="#/signin">Sign In</a></li><li><a href="#/signup">Quick Start</a></li><li><a href="#">Contact Us</a></li><li><a href="#">FAQ</a></li></ul></div>
-      <div><h5>About</h5><ul><li><a href="#" data-jump="glance">PNC NEXUS at a Glance</a></li><li><a href="#">Mission &amp; Values</a></li><li><a href="#">Governance</a></li><li><a href="#">Privacy</a></li><li><a href="#">Accessibility</a></li></ul></div>
-      <div class="phone">${ico.phone}${PHONE}</div>
-    </div></footer>`;
+  `;
   }
 
   function authScreen(mode) {
@@ -229,11 +161,12 @@
     const r = route();
     const user = auth.current();
     if (!user) {
-      if (!PUBLIC.includes(r)) { location.replace('#/home'); return false; }
-      if (r === '') { location.replace('#/home'); return false; }
+      // Guests may take the onboarding before creating an account
+      if (r === '' || r === 'landing') { location.replace('#/home'); return false; }
+      if (!PUBLIC.includes(r) && !ONBOARDING.includes(r)) { location.replace('#/home'); return false; }
       return true;
     }
-    if (r === '' || r === 'signin' || r === 'signup') { location.replace(auth.nextRoute()); return false; }
+    if (r === '' || r === 'home' || r === 'signin' || r === 'signup') { location.replace(auth.nextRoute()); return false; }
     // Signed in but onboarding unfinished: dashboard routes go to onboarding
     if (!PUBLIC.includes(r) && !ONBOARDING.includes(r) && !auth.onboarding().done) { location.replace('#/welcome'); return false; }
     return true;
@@ -307,7 +240,10 @@
       if (accounts[email]?.hash) return fail('email', 'An account with this email already exists. Sign in instead.');
       accounts[email] = { name: v.name.trim(), business: v.business.trim(), hash: h };
       write(ACCOUNTS, accounts);
-      write(auth.obKey(email), { name: v.name.trim(), business: v.business.trim(), email });
+      // Keep anything answered during guest onboarding
+      const guest = read(auth.obKey(null), {});
+      write(auth.obKey(email), { ...guest, name: v.name.trim(), business: v.business.trim(), email });
+      try { localStorage.removeItem(auth.obKey(null)); } catch {}
     } else {
       if (!accounts[email] || accounts[email].hash !== h) return fail(null, 'Email or password is incorrect.');
     }
