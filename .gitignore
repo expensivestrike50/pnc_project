@@ -1,0 +1,5 @@
+# Local-only files
+TEST_ACCOUNTS.md
+*.pdf
+.DS_Store
+_test_*.html
