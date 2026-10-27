@@ -101,8 +101,9 @@
         <h1 class="lp-h1">Plan Your Next Chapter with us</h1>
         <p>A few honest answers today give you a clear picture of what your business may be worth and where it could go next.</p>
         <div class="lp-hero-btns">
-          <a class="lp-btn fill" href="#/welcome">Get started</a>
-          <a class="lp-btn line" href="#/signin">Sign in</a>
+          ${signed
+            ? `<a class="lp-btn fill" href="${auth.nextRoute()}">Go to dashboard</a><a class="lp-btn line" href="#" data-signout>Sign out</a>`
+            : `<a class="lp-btn fill" href="#/welcome">Get started</a><a class="lp-btn line" href="#/signin">Sign in</a>`}
         </div>
       </div>
       <div class="lp-family"><img src="${img('family.png')}" alt="Family business owners"></div>
@@ -166,7 +167,9 @@
       if (!PUBLIC.includes(r) && !ONBOARDING.includes(r)) { location.replace('#/home'); return false; }
       return true;
     }
-    if (r === '' || r === 'home' || r === 'signin' || r === 'signup') { location.replace(auth.nextRoute()); return false; }
+    // The front page is always shown; it offers a dashboard button when signed in
+    if (r === '' || r === 'landing') { location.replace('#/home'); return false; }
+    if (r === 'signin' || r === 'signup') { location.replace(auth.nextRoute()); return false; }
     // Signed in but onboarding unfinished: dashboard routes go to onboarding
     if (!PUBLIC.includes(r) && !ONBOARDING.includes(r) && !auth.onboarding().done) { location.replace('#/welcome'); return false; }
     return true;
@@ -185,6 +188,7 @@
   /* ---------------- Events ---------------- */
 
   root.addEventListener('click', (e) => {
+    if (e.target.closest('[data-signout]')) { e.preventDefault(); auth.signOut(); render(); return; }
     const jump = e.target.closest('[data-jump]');
     if (jump) {
       e.preventDefault();
