@@ -20,17 +20,17 @@ const OWNER = {
   ],
   pathways: [
     {
-      t: 'Prepare before deciding', fit: 56,
+      t: 'Prepare before deciding', short: 'Prepare', fit: 56, liq: 0.17, ctrl: 0.6, ev: 'Grows with readiness',
       why: 'Overall readiness is 54/100. 3 year runway allows improvement work.',
       pro: 'Improves options and potential value.', con: 'Delays liquidity; market conditions may change.',
     },
     {
-      t: 'Family transfer', fit: 55,
+      t: 'Family transfer', short: 'Family', fit: 55, liq: 0.36, ctrl: 0.8, ev: '$23.9M · 4.3x',
       why: 'A family successor may be interested, not yet confirmed. Family alignment scored 55.',
       pro: 'Preserves legacy and control within the family.', con: 'Often lower immediate liquidity; may require seller financing or gifting.',
     },
     {
-      t: 'Strategic sale', fit: 55,
+      t: 'Strategic sale', short: 'Strategic sale', fit: 55, liq: 0.8, ctrl: 0.32, ev: '$29.6M · 5.3x',
       why: 'EBITDA of $5.6M may attract industry acquirers. Buyer interest has not been tested.',
       pro: 'Potentially strongest headline price.', con: 'Less control over culture, name and team after close.',
     },
@@ -239,6 +239,59 @@ function comparisonBars(r, s) {
 
 const scenState = () => ({ ...SCEN_DEFAULT, ...loadJSON(SCEN_KEY, {}) });
 
+/* ---------------- Pathways + team logos ---------------- */
+
+const PATH_COLORS = [C.blue, C.violet, C.teal];
+
+function pathwaysPanel() {
+  const P = OWNER.pathways;
+  const X0 = 44, X1 = 396, Y0 = 16, Y1 = 214;
+  const px = (v) => X0 + v * (X1 - X0), py = (v) => Y1 - v * (Y1 - Y0);
+  const tip = (pw) => `${pw.why} + ${pw.pro} − ${pw.con}`;
+  let svg = `<svg viewBox="0 0 410 252" width="100%" role="img" aria-label="Pathways by liquidity and control">
+    <rect x="${X0}" y="${Y0}" width="${(X1 - X0) / 2}" height="${(Y1 - Y0) / 2}" fill="#F3F1FF"/>
+    <rect x="${(X0 + X1) / 2}" y="${(Y0 + Y1) / 2}" width="${(X1 - X0) / 2}" height="${(Y1 - Y0) / 2}" fill="#EAF7F5"/>
+    <text x="${X0 + 10}" y="${Y0 + 18}" font-size="11.5" font-weight="600" fill="#8B7FD9">KEEP &amp; BUILD</text>
+    <text x="${X1 - 10}" y="${Y1 - 10}" font-size="11.5" font-weight="600" fill="#3F9C92" text-anchor="end">SELL &amp; EXIT</text>
+    <line x1="${X0}" x2="${X1}" y1="${Y1}" y2="${Y1}" stroke="#B1B9CF"/>
+    <line x1="${X0}" x2="${X0}" y1="${Y0}" y2="${Y1}" stroke="#B1B9CF"/>
+    <line x1="${(X0 + X1) / 2}" x2="${(X0 + X1) / 2}" y1="${Y0}" y2="${Y1}" stroke="#DFE5EE" stroke-dasharray="4 4"/>
+    <line x1="${X0}" x2="${X1}" y1="${(Y0 + Y1) / 2}" y2="${(Y0 + Y1) / 2}" stroke="#DFE5EE" stroke-dasharray="4 4"/>
+    <text x="${X1}" y="${Y1 + 20}" font-size="12" fill="${C.muted}" text-anchor="end">Immediate liquidity →</text>
+    <text x="${X0}" y="${Y1 + 20}" font-size="12" fill="${C.muted}">Low</text>
+    <text transform="translate(${X0 - 14} ${Y0}) rotate(-90)" font-size="12" fill="${C.muted}" text-anchor="end">Legacy &amp; control →</text>`;
+  P.forEach((pw, i) => {
+    const x = px(pw.liq), y = py(pw.ctrl), r = pw.fit * 0.36;
+    const right = x < X1 - 120;
+    svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="${PATH_COLORS[i]}" fill-opacity=".18" stroke="${PATH_COLORS[i]}" stroke-width="2" data-tip="${tip(pw)}"/>`;
+    svg += `<text x="${x}" y="${y + 5}" font-size="14" font-weight="700" fill="${C.ink}" text-anchor="middle" pointer-events="none">${pw.fit}</text>`;
+    svg += `<text x="${right ? x + r + 8 : x - r - 8}" y="${y + 4}" font-size="12.5" font-weight="600" fill="${C.ink}" text-anchor="${right ? 'start' : 'end'}" pointer-events="none">${pw.short}</text>`;
+  });
+  svg += `</svg>`;
+
+  const level = (v) => (v < 0.4 ? 1 : v < 0.7 ? 2 : 3);
+  const dots = (v, col) => `<span class="ow-dots" aria-label="${['Low', 'Medium', 'High'][level(v) - 1]}">${[1, 2, 3].map((d) => `<i style="background:${d <= level(v) ? col : '#E3E8F1'}"></i>`).join('')}</span>`;
+  const matrix = `<div class="ow-pmx">
+      <div class="h"><span>Pathway</span><span>Value</span><span>Liquidity</span><span>Control</span></div>
+      ${P.map((pw, i) => `<div class="r" data-tip="${tip(pw)}">
+        <span class="n"><em style="background:${PATH_COLORS[i]}">0${i + 1}</em>${pw.short}</span>
+        <span class="v">${pw.ev}</span>${dots(pw.liq, PATH_COLORS[i])}${dots(pw.ctrl, PATH_COLORS[i])}
+      </div>`).join('')}
+    </div>`;
+  return `<div class="ow-chart">${svg}</div>${matrix}`;
+}
+
+// Illustrative logo marks for each matched team
+function teamLogo(ini) {
+  const marks = {
+    HW: `<rect width="44" height="44" rx="12" fill="#14213D"/><path d="M11 30V14l7 8 7-8v16" fill="none" stroke="#F4C95D" stroke-width="3" stroke-linejoin="round"/><path d="M27 14l3 16 3-9 3 9 3-16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" transform="translate(-4 0)"/>`,
+    PP: `<rect width="44" height="44" rx="12" fill="#E6F6F3"/><path d="M10 18 22 10l12 8z" fill="#0F9F8F"/><path d="M13 20v10M19 20v10M25 20v10M31 20v10" stroke="#0F9F8F" stroke-width="3" stroke-linecap="round"/><rect x="10" y="32" width="24" height="3" rx="1.5" fill="#0F9F8F"/>`,
+    BC: `<rect width="44" height="44" rx="12" fill="#FFF1E6"/><path d="M22 8l12 7v14l-12 7-12-7V15z" fill="#E0662A"/><path d="M16 27v-4M22 27v-8M28 27v-11" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+    TM: `<rect width="44" height="44" rx="12" fill="#F1EBFF"/><circle cx="22" cy="22" r="11" fill="none" stroke="#9B5CF6" stroke-width="3"/><path d="M22 11a11 11 0 0 1 11 11" fill="none" stroke="#5B2EC4" stroke-width="3" stroke-linecap="round"/><path d="M33 17v5h-5" fill="none" stroke="#5B2EC4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="22" r="3.5" fill="#9B5CF6"/>`,
+  };
+  return `<svg class="ow-logo" viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">${marks[ini] || ''}</svg>`;
+}
+
 /* ---------------- Page ---------------- */
 
 pages.owner = () => {
@@ -249,8 +302,6 @@ pages.owner = () => {
   const requested = loadJSON(REQ_KEY, null);
   const margin = ((OWNER.ebitda / OWNER.revenue) * 100).toFixed(1);
   const weakest = [...OWNER.dimensions].sort((a, b) => a[1] - b[1])[0];
-  const fitCols = [C.blue, C.violet, C.teal];
-  const pathTips = OWNER.pathways.map((pw) => `${pw.why} + ${pw.pro} − ${pw.con}`);
 
   return `
   <section class="panel ow-top">
@@ -292,16 +343,7 @@ pages.owner = () => {
       </div>
       <div class="ow-chart" id="owWater">${waterfall(r)}</div>`,
       `<div class="ow-head-r"><button class="ow-link" data-reset>Reset</button>${info('Tax applies only to the cash portion of the owner share (after debt, fees and rollover), treated as fully taxable gain. Rollover is assumed tax-deferred. Consult tax professionals.')}</div>`)}
-    ${card('Pathway fit', 'Options, not a verdict', `
-      <div class="ow-fits">
-        ${OWNER.pathways.map((pw, i) => `
-          <div class="ow-fit" data-tip="${pathTips[i]}">
-            <div class="l"><span><em style="background:${fitCols[i]}">0${i + 1}</em>${pw.t}</span><b>${pw.fit}</b></div>
-            <div class="t"><i style="width:${pw.fit}%;background:${fitCols[i]}"></i></div>
-            <div class="pc"><span class="pro">+ ${pw.pro.replace(/\.$/, '')}</span><span class="con">− ${pw.con.split(';')[0].replace(/\.$/, '')}</span></div>
-          </div>`).join('')}
-        <div class="ow-axis"><span>0</span><span>50</span><span>100</span></div>
-      </div>`, info('Fit scores are relative demo indicators computed from profile fields.'))}
+    ${card('Possible pathways', 'Options, not a verdict', pathwaysPanel(), info('Fit scores are relative demo indicators computed from profile fields. Hover a pathway for the reasoning.'))}
   </div>
 
   <div class="grid ow-r3">
@@ -310,7 +352,7 @@ pages.owner = () => {
     ${card('PNC teams that may help', 'Potential matches', `
       <div class="ow-teams2">
         ${OWNER.teams.map(([ini, n, fit, d, c, bg]) => `
-          <div class="ow-tm" data-tip="${d}"><span class="av" style="color:${c};background:${bg}">${ini}</span>
+          <div class="ow-tm" data-tip="${d}">${teamLogo(ini)}
             <div><b>${n}</b><small>${fit}</small></div>
             <span class="dot ${fit.startsWith('Potential') ? 'hi' : ''}"></span></div>`).join('')}
       </div>`, info('A match is not a referral or acceptance. Advisors and specialist teams make engagement decisions.'))}
@@ -336,9 +378,7 @@ pages.owner = () => {
       <div class="ow-gaps2">
         ${OWNER.gaps.map(([t, d, c]) => `<div class="g" data-tip="${d}"><i class="${c}"></i>${t}</div>`).join('')}
       </div>`, `<span class="ow-badge red">${OWNER.gaps.length} open</span>`)}
-  </div>
-
-  <p class="ow-disclaimer">All figures are preliminary and illustrative. Multiples are bounded to a 4–6x demo band and are not approved PNC benchmarks. Not a certified valuation.</p>`;
+  </div>`;
 };
 
 function ring(n, total, col, label) {
