@@ -96,7 +96,7 @@
       <div class="right"><a class="lp-search" href="#" aria-label="Search">${ico.search}</a>${cta}</div>
     </div></header>
 
-    <section class="lp-hero"><div class="lp-wrap">
+    <section class="lp-hero"><div class="lp-wrap lp-hero-grid">
       <div class="lp-hero-copy">
         <h1 class="lp-h1">Plan Your Next Chapter with us</h1>
         <p>A few honest answers today give you a clear picture of what your business may be worth and where it could go next.</p>
@@ -105,12 +105,13 @@
             ? `<a class="lp-btn fill" href="${auth.nextRoute()}">Go to dashboard</a><a class="lp-btn line" href="#" data-signout>Sign out</a>`
             : `<a class="lp-btn fill" href="#/welcome">Get started</a><a class="lp-btn line" href="#/signin">Sign in</a>`}
         </div>
+        <div class="lp-contact"><span class="ph">${ico.phone}${PHONE}</span>${social}</div>
       </div>
-      <div class="lp-family"><img src="${img('family.png')}" alt="Family business owners"></div>
-      <div class="lp-chip a">${ico.briefcase}Business Sale</div>
-      <div class="lp-chip b">${ico.house}Family Succession</div>
-      <div class="lp-dots"><i class="on"></i><i></i><i></i><i></i></div>
-      <div class="lp-contact"><span class="ph">${ico.phone}${PHONE}</span>${social}</div>
+      <div class="lp-visual">
+        <div class="lp-family"><img src="${img('family.png')}" alt="Family business owners"></div>
+        <div class="lp-chip a">${ico.briefcase}Business Sale</div>
+        <div class="lp-chip b">${ico.house}Family Succession</div>
+      </div>
     </div></section>
   `;
   }

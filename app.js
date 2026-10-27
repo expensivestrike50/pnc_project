@@ -636,5 +636,25 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Account menu on the header profile picture
+const acctBtn = document.getElementById('acctBtn');
+const acctMenu = document.getElementById('acctMenu');
+function setAcctMenu(open) {
+  if (open) {
+    const email = window.ProBankAuth?.current();
+    const acc = email ? window.ProBankAuth.account(email) : null;
+    document.getElementById('acctName').textContent = acc?.name || 'Signed in';
+    document.getElementById('acctEmail').textContent = email || '';
+  }
+  acctMenu.hidden = !open;
+  acctBtn.setAttribute('aria-expanded', String(open));
+}
+acctBtn.addEventListener('click', (e) => { e.stopPropagation(); setAcctMenu(acctMenu.hidden); });
+document.addEventListener('click', (e) => { if (!acctMenu.hidden && !e.target.closest('.acct')) setAcctMenu(false); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setAcctMenu(false); });
+acctMenu.addEventListener('click', (e) => { if (e.target.closest('a')) setAcctMenu(false); });
+document.getElementById('acctSignout').addEventListener('click', () => { setAcctMenu(false); window.ProBankAuth.signOut(); });
+window.addEventListener('hashchange', () => setAcctMenu(false));
+
 window.addEventListener('hashchange', render);
 render();

@@ -699,3 +699,21 @@ td { font-size: 16px; color: var(--text); }
 .ow-dots { display: inline-flex; gap: 4px; }
 .ow-dots i { width: 9px; height: 9px; border-radius: 50%; }
 .ow-logo { flex-shrink: 0; border-radius: 12px; display: block; }
+
+/* Account menu */
+.acct { position: relative; }
+button.hdr-avatar { padding: 0; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
+button.hdr-avatar:hover, button.hdr-avatar[aria-expanded="true"] { border-color: var(--blue); }
+.acct-menu {
+  position: absolute; right: 0; top: calc(100% + 12px); width: 250px; z-index: 50;
+  background: #fff; border-radius: 18px; padding: 8px; border: 1px solid #e6eff5;
+  box-shadow: 0 20px 40px -12px rgba(52, 60, 106, .25);
+}
+.acct-who { display: flex; align-items: center; gap: 12px; padding: 10px 10px 14px; border-bottom: 1px solid #edf0f7; margin-bottom: 6px; }
+.acct-who img { width: 40px; height: 40px; border-radius: 50%; }
+.acct-who b { display: block; font-size: 15px; color: var(--navy); font-weight: 600; }
+.acct-who span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; word-break: break-all; }
+.acct-menu a, .acct-menu button { display: block; width: 100%; text-align: left; padding: 10px 12px; border-radius: 10px; font-size: 14.5px; font-weight: 500; color: var(--text); }
+.acct-menu a:hover, .acct-menu button:hover { background: #f5f7fa; }
+.acct-menu .danger { color: var(--red); }
+.acct-menu .danger:hover { background: #fff0f3; }

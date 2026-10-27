@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=202610271536">
-  <link rel="stylesheet" href="onboarding.css?v=202610271536">
-  <link rel="stylesheet" href="landing.css?v=202610271536">
+  <link rel="stylesheet" href="styles.css?v=202610271543">
+  <link rel="stylesheet" href="onboarding.css?v=202610271543">
+  <link rel="stylesheet" href="landing.css?v=202610271543">
 </head>
 <body>
   <div class="app">
@@ -35,7 +35,15 @@
           </label>
           <button class="hdr-btn" aria-label="Settings"><img src="assets/icons/hdr-gear.png" alt=""></button>
           <button class="hdr-btn" aria-label="Notifications"><img src="assets/icons/hdr-bell.png" alt=""></button>
-          <a class="hdr-avatar" href="#/profile"><img src="assets/icons/hdr-avatar.png" alt="Alex Morgan"></a>
+          <div class="acct">
+            <button class="hdr-avatar" id="acctBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Account menu"><img src="assets/icons/hdr-avatar.png" alt=""></button>
+            <div class="acct-menu" id="acctMenu" role="menu" hidden>
+              <div class="acct-who"><img src="assets/icons/hdr-avatar.png" alt=""><div><b id="acctName">Signed in</b><span id="acctEmail"></span></div></div>
+              <a href="#/profile" role="menuitem">Profile</a>
+              <a href="#/profile/preferences" role="menuitem">Settings</a>
+              <button type="button" role="menuitem" id="acctSignout" class="danger">Log out</button>
+            </div>
+          </div>
         </div>
         <label class="search search-mobile">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="8.8" cy="8.8" r="7.3" stroke="#718EBF" stroke-width="1.8"/><path d="m14.2 14.2 4.3 4.3" stroke="#718EBF" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -45,9 +53,9 @@
       <main class="content" id="content"></main>
     </div>
   </div>
-  <script src="app.js?v=202610271536"></script>
-  <script src="owner.js?v=202610271536"></script>
-  <script src="landing.js?v=202610271536"></script>
-  <script src="onboarding.js?v=202610271536"></script>
+  <script src="app.js?v=202610271543"></script>
+  <script src="owner.js?v=202610271543"></script>
+  <script src="landing.js?v=202610271543"></script>
+  <script src="onboarding.js?v=202610271543"></script>
 </body>
 </html>
