@@ -54,7 +54,7 @@
 .lp-hero::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 42%; background: var(--pink-bg); }
 .lp-hero-grid { position: relative; width: 100%; display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: stretch; }
 .lp-hero-copy { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 40px 0 64px; }
-.lp-h1 { font-size: clamp(38px, 3.8vw, 64px); line-height: 1.08; font-weight: 800; letter-spacing: -.8px; color: var(--ink); margin-top: 20px; max-width: 640px; }
+.lp-h1 { font-size: clamp(38px, 3.8vw, 64px); line-height: 1.08; font-weight: 800; letter-spacing: -.8px; color: var(--ink); max-width: 640px; }
 .lp-hero-copy > p { font-size: clamp(16px, 1.1vw, 19px); line-height: 1.55; color: var(--body); margin-top: 22px; max-width: 520px; }
 .lp-hero-btns { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
 .lp-hero-copy .lp-tagline { font-size: 14px; font-weight: 600; color: var(--title); margin-top: 28px; }
@@ -78,16 +78,23 @@
 .lp-card .lp-more { margin-top: 28px; }
 
 /* Research */
-.lp-research { background: var(--tint); padding: 100px 0; }
-.lp-research-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: center; }
-.lp-research h2 { font-size: clamp(30px, 2.6vw, 40px); line-height: 1.15; font-weight: 800; color: var(--ink); margin-top: 14px; letter-spacing: -.4px; }
-.lp-research p { font-size: 16px; line-height: 1.65; color: var(--body); margin-top: 18px; max-width: 520px; }
-.lp-research .lp-more { margin-top: 24px; }
-.lp-research small { display: block; font-size: 12.5px; line-height: 1.6; color: var(--muted); margin-top: 22px; max-width: 480px; }
-.lp-figs { display: grid; gap: 20px; }
-.lp-fig { background: #fff; border-radius: 8px; padding: 28px 32px; border-left: 4px solid var(--pink); }
-.lp-fig b { display: block; font-size: 52px; line-height: 1; font-weight: 800; color: var(--ink); letter-spacing: -1px; }
-.lp-fig span { display: block; font-size: 14.5px; line-height: 1.5; color: var(--body); margin-top: 10px; }
+.lp-research { background: var(--ink); color: #fff; padding: 110px 0 72px; }
+.lp-research-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 72px; align-items: center; }
+.lp-research h2 { font-size: clamp(32px, 2.8vw, 44px); line-height: 1.12; font-weight: 800; color: #fff; margin-top: 16px; letter-spacing: -.5px; }
+.lp-research-copy p { font-size: 17px; line-height: 1.6; color: #bdbdbd; margin-top: 20px; max-width: 440px; }
+.lp-research .lp-more { margin-top: 28px; }
+.lp-gap { margin: 0; background: #161616; border: 1px solid #2a2a2a; border-radius: 10px; padding: 36px 40px 28px; }
+.lp-gap figcaption { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8d8d8d; }
+.lp-gap-row { margin-top: 30px; }
+.lp-gap-head { display: flex; align-items: baseline; gap: 16px; }
+.lp-gap-head b { font-size: 48px; line-height: 1; font-weight: 800; letter-spacing: -1px; min-width: 112px; }
+.lp-gap-head span { font-size: 14.5px; line-height: 1.45; color: #d4d4d4; }
+.lp-gap-track { position: relative; height: 12px; margin-top: 16px; border-radius: 6px; background: #2a2a2a; }
+.lp-gap-track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--pink); }
+.lp-gap-track em { position: absolute; top: 0; bottom: 0; border: 2px dashed var(--pink); border-left: 0; border-radius: 0 6px 6px 0; box-sizing: border-box; }
+.lp-gap-track em span { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--pink); }
+.lp-gap-axis { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 10px; border-top: 1px solid #2a2a2a; font-size: 11.5px; color: #8d8d8d; }
+.lp-research-note { display: block; margin-top: 56px; padding-top: 22px; border-top: 1px solid #2a2a2a; font-size: 12.5px; line-height: 1.6; color: #8d8d8d; }
 
 /* One relationship */
 .lp-one { padding: 100px 0; text-align: center; }
@@ -164,7 +171,9 @@
   .lp-visual figcaption { position: static; margin: 0 auto 16px; order: -1; }
   .lp-more-than, .lp-research, .lp-one { padding: 64px 0; }
   .lp-card { padding: 28px 24px; }
-  .lp-fig b { font-size: 42px; }
+  .lp-gap { padding: 28px 22px 22px; }
+  .lp-gap-head { flex-direction: column; gap: 6px; }
+  .lp-gap-head b { font-size: 40px; }
   .au-row2 { grid-template-columns: 1fr; }
   .au-card h1 { font-size: 28px; }
 }

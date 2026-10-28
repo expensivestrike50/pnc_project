@@ -48,9 +48,6 @@
   const img = (n) => `assets/img/home/${n}`;
   const logo = `<a class="lp-logo" href="#/home"><img src="assets/img/nexus-logo.png" alt="PNC NEXUS"></a>`;
 
-  const ico = {
-    go: `<svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M1 6h11m0 0L7.5 1.5M12 6l-4.5 4.5" stroke="#F2711C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  };
 
   const root = document.createElement('div');
   root.className = 'lp';
@@ -73,7 +70,6 @@
     <main id="lp-main">
     <section class="lp-hero"><div class="lp-wrap lp-hero-grid">
       <div class="lp-hero-copy">
-        <span class="lp-eyebrow">Your business. Your next chapter.</span>
         <h1 class="lp-h1">A thoughtful transition starts with a connected plan.</h1>
         <p>Bring your business goals, family priorities, and advisory team together, from first questions to life beyond a sale.</p>
         <div class="lp-hero-btns">
@@ -81,7 +77,7 @@
           <a class="lp-btn line" href="#" data-demo="client">Explore the sample</a>
         </div>
         <p class="lp-tagline">Owner-guided discovery. Advisor-reviewed decisions. AI support along the way.</p>
-        <a class="lp-more" href="#" data-jump="research">Explore the research behind PNC NEXUS ${ico.go}</a>
+        <a class="lp-more" href="#" data-jump="research">Explore the research behind PNC NEXUS</a>
       </div>
       <figure class="lp-visual">
         <div class="lp-family"><img src="${img('family.png')}" alt="Business owners considering their family's next chapter"></div>
@@ -99,29 +95,39 @@
           <span class="lp-eyebrow">For business owners</span>
           <h3>Know your options. Keep your voice.</h3>
           <p>Explore transition paths, prepare your family, model liquidity, and control specialist sharing. Your AI assistant helps you prepare for a trusted human conversation.</p>
-          <a class="lp-more" href="#" data-demo="client">Explore the owner journey ${ico.go}</a>
+          <a class="lp-more" href="#" data-demo="client">Explore the owner journey</a>
         </article>
         <article class="lp-card">
           <span class="lp-eyebrow">For relationship advisors</span>
           <h3>See the whole relationship.</h3>
           <p>Manage your client portfolio, surface cases that need attention, map family relationships, and coordinate the next step across PNC teams.</p>
-          <a class="lp-more" href="#" data-demo="advisor">Explore the advisor workspace ${ico.go}</a>
+          <a class="lp-more" href="#" data-demo="advisor">Explore the advisor workspace</a>
         </article>
       </div>
     </div></section>
 
-    <section class="lp-research" id="lp-research"><div class="lp-wrap lp-research-grid">
-      <div>
-        <span class="lp-eyebrow">Why connected advice matters</span>
-        <h2>Business decisions are personal decisions.</h2>
-        <p>PNC's 2026 research found that 89% of surveyed owners value advice integrating business and personal needs; 55% currently use one advisor for both.</p>
-        <a class="lp-more" href="#">Read the PNC research ${ico.go}</a>
-        <small>300 U.S. private business owners and co-owners; surveyed Nov–Dec 2025. Research supports the problem, not this product's effectiveness.</small>
+    <section class="lp-research" id="lp-research"><div class="lp-wrap">
+      <div class="lp-research-grid">
+        <div class="lp-research-copy">
+          <span class="lp-eyebrow">Why connected advice matters</span>
+          <h2>Business decisions are personal decisions.</h2>
+          <p>Most owners want advice that sees their business and their family as one picture. Far fewer have it today.</p>
+          <a class="lp-more" href="#">Read the PNC research</a>
+        </div>
+        <figure class="lp-gap" aria-label="89% of surveyed owners value integrated advice; 55% use one advisor for both">
+          <figcaption>PNC 2026 owner research</figcaption>
+          <div class="lp-gap-row">
+            <div class="lp-gap-head"><b>89%</b><span>value advice integrating business and personal needs</span></div>
+            <div class="lp-gap-track"><i style="width:89%"></i></div>
+          </div>
+          <div class="lp-gap-row">
+            <div class="lp-gap-head"><b>55%</b><span>currently use one advisor for both</span></div>
+            <div class="lp-gap-track"><i style="width:55%"></i><em style="left:55%;width:34%"><span>34-pt gap</span></em></div>
+          </div>
+          <div class="lp-gap-axis"><span>0%</span><span>50%</span><span>100%</span></div>
+        </figure>
       </div>
-      <div class="lp-figs">
-        <div class="lp-fig"><b>89%</b><span>value advice integrating business and personal needs</span></div>
-        <div class="lp-fig"><b>55%</b><span>currently use one advisor for both</span></div>
-      </div>
+      <small class="lp-research-note">300 U.S. private business owners and co-owners; surveyed Nov–Dec 2025. Research supports the problem, not this product's effectiveness.</small>
     </div></section>
 
     <section class="lp-one"><div class="lp-wrap">
